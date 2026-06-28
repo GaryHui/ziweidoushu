@@ -145,6 +145,7 @@ h3 {
 
 .study-panel,
 .reading-panel,
+.course-notes,
 .library article {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -264,6 +265,91 @@ textarea:focus {
   color: var(--muted);
 }
 
+.course-section {
+  margin-top: 24px;
+  padding: 26px;
+  border: 1px solid rgba(216, 222, 232, 0.92);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 12px 32px rgba(38, 50, 74, 0.07);
+}
+
+.section-heading {
+  display: grid;
+  gap: 8px;
+  max-width: 780px;
+  margin-bottom: 22px;
+}
+
+.section-heading p:last-child {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+.video-frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(38, 50, 74, 0.14);
+  border-radius: 8px;
+  background: #111827;
+}
+
+.video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.course-notes {
+  padding: 20px;
+}
+
+.note-list {
+  display: grid;
+  gap: 12px;
+}
+
+.note-item {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.note-item span {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(184, 129, 44, 0.14);
+  color: var(--gold);
+  font-weight: 800;
+}
+
+.note-item strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.note-item p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
 .library {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -284,6 +370,7 @@ textarea:focus {
 @media (max-width: 860px) {
   .hero,
   .workspace,
+  .course-grid,
   .library {
     grid-template-columns: 1fr;
   }
@@ -308,7 +395,8 @@ textarea:focus {
   }
 
   .study-panel,
-  .reading-panel {
+  .reading-panel,
+  .course-section {
     padding: 18px;
   }
 }

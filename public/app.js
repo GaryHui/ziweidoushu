@@ -20,8 +20,27 @@ const lessons = [
 const palaces = ["命宫", "财帛宫", "官禄宫", "福德宫", "迁移宫", "夫妻宫", "田宅宫", "父母宫"];
 const stars = ["紫微", "天机", "太阳", "武曲", "天同", "廉贞", "天府", "太阴", "贪狼", "巨门", "天相", "天梁", "七杀", "破军"];
 const hexagrams = ["乾为天", "坤为地", "水雷屯", "山水蒙", "水天需", "天水讼", "地水师", "水地比", "风天小畜", "天泽履", "地天泰", "天地否"];
+const courseSteps = [
+  {
+    title: "看一集",
+    text: "先抓本集主题，不急着记住所有术语。"
+  },
+  {
+    title: "记三点",
+    text: "记录一个新概念、一个案例、一个仍不明白的问题。"
+  },
+  {
+    title: "对照盘",
+    text: "把视频内容放到自己的研习记录里做小范围验证。"
+  },
+  {
+    title: "周复盘",
+    text: "每周整理一次笔记，区分知识、体会和待查资料。"
+  }
+];
 
 const lessonList = document.querySelector("#lessonList");
+const courseNotes = document.querySelector("#courseNotes");
 const form = document.querySelector("#readingForm");
 const result = document.querySelector("#result");
 
@@ -29,6 +48,16 @@ lessonList.innerHTML = lessons.map((lesson) => `
   <article class="lesson">
     <strong>${lesson.title}</strong>
     <span>${lesson.text}</span>
+  </article>
+`).join("");
+
+courseNotes.innerHTML = courseSteps.map((step, index) => `
+  <article class="note-item">
+    <span>${index + 1}</span>
+    <div>
+      <strong>${step.title}</strong>
+      <p>${step.text}</p>
+    </div>
   </article>
 `).join("");
 
