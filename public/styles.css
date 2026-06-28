@@ -430,20 +430,20 @@ textarea:focus {
   overflow: hidden;
 }
 
-.chart-center::before,
-.chart-center::after {
-  content: "";
+.center-lines {
   position: absolute;
   inset: 0;
-  margin: auto;
-  width: 150%;
-  height: 1px;
-  background: rgba(196, 117, 82, 0.3);
-  transform: rotate(52deg);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.chart-center::after {
-  transform: rotate(-52deg);
+.center-lines path {
+  fill: none;
+  stroke: rgba(226, 123, 101, 0.26);
+  stroke-width: 0.6;
+  vector-effect: non-scaling-stroke;
 }
 
 .chart-center h3 {

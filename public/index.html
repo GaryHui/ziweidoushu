@@ -32,7 +32,8 @@
           <label>
             历法
             <select name="calendarType" required>
-              <option value="solar" selected>阳历</option>
+              <option value="" selected disabled>选择历法</option>
+              <option value="solar">阳历</option>
               <option value="lunar">农历</option>
             </select>
           </label>
@@ -75,7 +76,7 @@
         </form>
 
         <div id="astrolabeResult" class="astrolabe-result" aria-live="polite">
-          <p class="muted">填写出生资料后，会按截图样式生成紫微斗数命盘。</p>
+          <p class="muted">填写出生资料后生成命盘。若要和参考链接一致，请选择“农历”。</p>
         </div>
       </section>
 

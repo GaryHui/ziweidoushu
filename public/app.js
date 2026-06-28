@@ -172,6 +172,10 @@ function renderChartCenter(profile) {
   const genderSymbol = profile.gender === "女" ? "♀" : "♂";
   return `
     <div class="chart-center">
+      <svg class="center-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 100 L25 0 L100 100 Z"></path>
+        <path d="M0 100 L100 0"></path>
+      </svg>
       <section>
         <h3>${genderSymbol} 基本信息</h3>
         <dl class="center-grid">
