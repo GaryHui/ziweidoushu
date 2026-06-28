@@ -384,9 +384,9 @@ textarea:focus {
 .chart-board {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, minmax(205px, 1fr));
-  grid-template-rows: repeat(4, minmax(178px, auto));
-  min-width: 900px;
+  grid-template-columns: repeat(4, minmax(260px, 1fr));
+  grid-template-rows: repeat(4, minmax(235px, auto));
+  min-width: 1120px;
   border: 1px solid #d7e4d2;
   background: #edf8e9;
 }
@@ -401,10 +401,10 @@ textarea:focus {
 
 .chart-palace {
   display: grid;
-  grid-template-rows: auto 1fr auto auto;
-  gap: 8px;
-  min-height: 178px;
-  padding: 9px 10px 8px;
+  grid-template-rows: 1fr auto auto;
+  gap: 10px;
+  min-height: 235px;
+  padding: 10px 9px 8px;
 }
 
 .slot-1 { grid-area: 1 / 1; }
@@ -424,9 +424,9 @@ textarea:focus {
   position: relative;
   grid-area: 2 / 2 / span 2 / span 2;
   display: grid;
-  align-content: start;
-  min-height: 356px;
-  padding: 22px 34px;
+  align-content: stretch;
+  min-height: 470px;
+  padding: 24px 34px 20px;
   overflow: hidden;
 }
 
@@ -449,9 +449,23 @@ textarea:focus {
 .chart-center h3 {
   position: relative;
   z-index: 1;
-  margin-bottom: 14px;
+  margin: 0 0 18px;
   color: #25304a;
   text-align: center;
+}
+
+.chart-center section {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  padding-bottom: 26px;
+  border-bottom: 1px dashed rgba(122, 143, 119, 0.35);
+}
+
+.chart-center .fortune-panel {
+  margin-top: 26px;
+  border-bottom: 0;
 }
 
 .chart-center dl {
@@ -465,9 +479,13 @@ textarea:focus {
   font-size: 0.88rem;
 }
 
+.center-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
 .chart-center dl div {
   display: grid;
-  grid-template-columns: 76px minmax(0, 1fr);
+  grid-template-columns: 86px minmax(0, 1fr);
   gap: 8px;
 }
 
@@ -485,29 +503,98 @@ textarea:focus {
   color: var(--ink);
 }
 
-.star-field {
+.powered {
+  position: absolute;
+  right: 28px;
+  bottom: 18px;
+  color: rgba(120, 130, 132, 0.35);
+  font-size: 1.1rem;
+  font-style: italic;
+  font-weight: 800;
+  z-index: 1;
+}
+
+.palace-stars {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px 7px;
-  align-content: start;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 112px;
 }
 
-.star-field span {
+.star-column {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.left-stars {
+  align-items: flex-start;
+}
+
+.right-stars {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.star-column span {
   color: #596273;
-  font-size: 0.74rem;
-  line-height: 1.25;
+  font-size: 0.82rem;
+  line-height: 1.15;
+  white-space: nowrap;
 }
 
-.major-field span,
-.star-field .major {
+.star-column .major {
   color: #51269b;
-  font-size: 0.92rem;
+  font-size: 1.03rem;
   font-weight: 800;
 }
 
-.star-field .with-mutagen {
+.star-column .with-mutagen {
   color: #b13e52;
   font-weight: 800;
+}
+
+.palace-limits {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 56px;
+  gap: 8px;
+  align-items: end;
+}
+
+.cycle-left,
+.cycle-right {
+  display: grid;
+  gap: 4px;
+  color: #8b9426;
+  font-size: 0.88rem;
+  line-height: 1.12;
+}
+
+.cycle-right {
+  color: #9b486b;
+  text-align: right;
+}
+
+.age-band {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  color: #8e8e8e;
+  font-weight: 800;
+}
+
+.age-band div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 8px;
+  font-size: 0.86rem;
+}
+
+.age-band strong {
+  color: #8a8a8a;
+  font-size: 1rem;
 }
 
 .palace-footer {
@@ -515,16 +602,15 @@ textarea:focus {
   justify-content: space-between;
   gap: 8px;
   align-items: end;
-  margin-top: auto;
-  padding-top: 8px;
-  border-top: 1px dashed rgba(122, 143, 119, 0.35);
+  padding-top: 0;
+  border-top: 0;
 }
 
 .palace-footer strong {
   display: inline-block;
   margin-right: 4px;
   color: #51269b;
-  font-size: 1rem;
+  font-size: 1.02rem;
 }
 
 .palace-footer > span {
@@ -542,15 +628,6 @@ textarea:focus {
   color: #b13e52;
   font-size: 0.72rem;
   font-weight: 800;
-}
-
-.palace-cycles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px 8px;
-  margin-top: auto;
-  color: #6b7a68;
-  font-size: 0.74rem;
 }
 
 .course-grid {

@@ -86,8 +86,6 @@ astrolabeForm.addEventListener("submit", async (event) => {
   }
 });
 
-astrolabeForm.requestSubmit();
-
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(form).entries());
@@ -170,22 +168,35 @@ function renderAstrolabe(payload) {
 }
 
 function renderChartCenter(profile) {
+  const today = formatDate(new Date());
+  const genderSymbol = profile.gender === "女" ? "♀" : "♂";
   return `
     <div class="chart-center">
-      <h3>基本信息</h3>
-      <dl>
-        ${centerItem("五行局", profile.fiveElementsClass)}
-        ${centerItem("四柱", profile.chineseDate)}
-        ${centerItem("阳历", profile.solarDate)}
-        ${centerItem("农历", profile.lunarDate)}
-        ${centerItem("时辰", `${profile.time} ${profile.timeRange}`)}
-        ${centerItem("生肖", profile.zodiac)}
-        ${centerItem("星座", profile.sign)}
-        ${centerItem("命主", profile.soul)}
-        ${centerItem("身主", profile.body)}
-        ${centerItem("命宫", profile.soulPalaceBranch)}
-        ${centerItem("身宫", profile.bodyPalaceBranch)}
-      </dl>
+      <section>
+        <h3>${genderSymbol} 基本信息</h3>
+        <dl class="center-grid">
+          ${centerItem("五行局", profile.fiveElementsClass)}
+          ${centerItem("年龄(虚岁)", `${getNominalAge(profile.solarDate)} 岁`)}
+          ${centerItem("四柱", profile.chineseDate)}
+          ${centerItem("阳历", profile.solarDate)}
+          ${centerItem("农历", profile.lunarDate)}
+          ${centerItem("时辰", `${profile.time}(${profile.timeRange})`)}
+          ${centerItem("生肖", profile.zodiac)}
+          ${centerItem("星座", profile.sign)}
+          ${centerItem("命主", profile.soul)}
+          ${centerItem("身主", profile.body)}
+          ${centerItem("命宫", profile.soulPalaceBranch)}
+          ${centerItem("身宫", profile.bodyPalaceBranch)}
+        </dl>
+      </section>
+      <section class="fortune-panel">
+        <h3>运限信息</h3>
+        <dl class="center-grid">
+          ${centerItem("农历", "二〇二六年五月十四")}
+          ${centerItem("阳历", today)}
+        </dl>
+      </section>
+      <span class="powered">Powered by iztro</span>
     </div>
   `;
 }
@@ -198,27 +209,44 @@ function renderChartPalace(palace, slot) {
   if (!palace) {
     return "";
   }
-  const majorStars = palace.majorStars.map((star) => renderChartStar(star, "major")).join("");
-  const minorStars = palace.minorStars.slice(0, 7).map((star) => renderChartStar(star)).join("");
-  const adjectiveStars = palace.adjectiveStars.slice(0, 4).map((star) => renderChartStar(star)).join("");
+  const mainStars = palace.majorStars.map((star) => renderChartStar(star, "major")).join("");
+  const sideStars = palace.minorStars.concat(palace.adjectiveStars).slice(0, 9);
+  const leftSideStars = sideStars.filter((_, index) => index % 2 === 0).map((star) => renderChartStar(star)).join("");
+  const rightSideStars = sideStars.filter((_, index) => index % 2 === 1).map((star) => renderChartStar(star)).join("");
   const bodyMark = palace.isBodyPalace ? "<span class=\"body-mark\">身宫</span>" : "";
   const originalMark = palace.isOriginalPalace ? "<span class=\"body-mark\">来因</span>" : "";
+  const ages = palace.ages?.slice(0, 8).map((age) => `<span>${escapeHtml(age)}</span>`).join("") || "";
+  const decadal = palace.decadal?.range?.join(" - ") || "-";
 
   return `
     <article class="chart-palace ${slot}">
-      <div class="star-field major-field">${majorStars || "<span>无主星</span>"}</div>
-      <div class="star-field minor-field">${minorStars}${adjectiveStars}</div>
+      <div class="palace-stars">
+        <div class="star-column left-stars">
+          ${mainStars || "<span class=\"major\">无主星</span>"}
+          ${leftSideStars}
+        </div>
+        <div class="star-column right-stars">${rightSideStars}</div>
+      </div>
+      <div class="palace-limits">
+        <div class="cycle-left">
+          <span>${escapeHtml(palace.changsheng12)}</span>
+          <span>${escapeHtml(palace.boshi12)}</span>
+        </div>
+        <div class="age-band">
+          <div>${ages}</div>
+          <strong>${escapeHtml(decadal)}</strong>
+        </div>
+        <div class="cycle-right">
+          <span>${escapeHtml(palace.jiangqian12)}</span>
+          <span>${escapeHtml(palace.suiqian12)}</span>
+        </div>
+      </div>
       <div class="palace-footer">
         <div>
           <strong>${escapeHtml(palace.name)}</strong>
           ${bodyMark}${originalMark}
         </div>
         <span>${escapeHtml(palace.heavenlyStem)}${escapeHtml(palace.earthlyBranch)}</span>
-      </div>
-      <div class="palace-cycles">
-        <span>${escapeHtml(palace.changsheng12)}</span>
-        <span>${escapeHtml(palace.boshi12)}</span>
-        <span>大限 ${escapeHtml(palace.decadal?.range?.join("-") || "-")}</span>
       </div>
     </article>
   `;
@@ -228,6 +256,20 @@ function renderChartStar(star, className = "") {
   const mutagen = star.mutagen ? `化${star.mutagen}` : "";
   const brightness = star.brightness ? ` ${star.brightness}` : "";
   return `<span class="${className} ${mutagen ? "with-mutagen" : ""}">${escapeHtml(star.name)}${escapeHtml(mutagen)}${escapeHtml(brightness)}</span>`;
+}
+
+function getNominalAge(solarDate) {
+  const year = Number(String(solarDate).split("-")[0]);
+  const currentYear = new Date().getFullYear();
+  return Number.isFinite(year) ? currentYear - year + 1 : "-";
+}
+
+function formatDate(date) {
+  return [
+    date.getFullYear(),
+    date.getMonth() + 1,
+    date.getDate()
+  ].join("-");
 }
 
 function createLocalReading(data, palace, star, hexagram) {

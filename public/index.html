@@ -31,23 +31,24 @@
         <form id="astrolabeForm" class="astrolabe-form">
           <label>
             历法
-            <select name="calendarType">
-              <option value="solar">阳历</option>
-              <option value="lunar" selected>农历</option>
+            <select name="calendarType" required>
+              <option value="solar" selected>阳历</option>
+              <option value="lunar">农历</option>
             </select>
           </label>
           <label>
             出生日期
-            <input name="date" type="date" value="1981-05-06" required>
+            <input name="date" type="date" required>
           </label>
           <label>
             出生时辰
-            <select name="timeIndex">
+            <select name="timeIndex" required>
+              <option value="" selected disabled>选择时辰</option>
               <option value="0">早子时 00:00-00:59</option>
               <option value="1">丑时 01:00-02:59</option>
               <option value="2">寅时 03:00-04:59</option>
               <option value="3">卯时 05:00-06:59</option>
-              <option value="4" selected>辰时 07:00-08:59</option>
+              <option value="4">辰时 07:00-08:59</option>
               <option value="5">巳时 09:00-10:59</option>
               <option value="6">午时 11:00-12:59</option>
               <option value="7">未时 13:00-14:59</option>
@@ -60,7 +61,8 @@
           </label>
           <label>
             性别
-            <select name="gender">
+            <select name="gender" required>
+              <option value="" selected disabled>选择性别</option>
               <option value="male">男</option>
               <option value="female">女</option>
             </select>
@@ -73,7 +75,7 @@
         </form>
 
         <div id="astrolabeResult" class="astrolabe-result" aria-live="polite">
-          <p class="muted">可先试：农历 1981-5-6、辰时、男，对应你提供的示例链接。</p>
+          <p class="muted">填写出生资料后，会按截图样式生成紫微斗数命盘。</p>
         </div>
       </section>
 
