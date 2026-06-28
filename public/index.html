@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="紫微斗数与易经学习、问事和 AI 辅助解读网页。">
+    <title>紫微斗数与易经研习</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">传统术数学堂</p>
+          <h1 id="page-title">紫微斗数与易经研习</h1>
+          <p class="intro">从星曜、宫位、四化，到卦象、爻辞与日常决策，把复杂体系拆成可学习、可记录、可复盘的路径。</p>
+        </div>
+        <div class="astro-map" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+          <strong>命</strong>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="研习工作台">
+        <aside class="study-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">学习路径</p>
+            <h2>今日入门</h2>
+          </div>
+          <div class="lesson-list" id="lessonList"></div>
+        </aside>
+
+        <section class="reading-panel" aria-labelledby="reading-title">
+          <div class="panel-heading">
+            <p class="eyebrow">问盘与问卦</p>
+            <h2 id="reading-title">生成一份研习记录</h2>
+          </div>
+
+          <form id="readingForm" class="reading-form">
+            <label>
+              姓名或代号
+              <input name="name" autocomplete="name" placeholder="例如：明澈">
+            </label>
+            <label>
+              出生日期
+              <input name="birthDate" type="date" required>
+            </label>
+            <label>
+              出生时辰
+              <select name="birthHour">
+                <option value="子时">子时 23:00-00:59</option>
+                <option value="丑时">丑时 01:00-02:59</option>
+                <option value="寅时">寅时 03:00-04:59</option>
+                <option value="卯时">卯时 05:00-06:59</option>
+                <option value="辰时">辰时 07:00-08:59</option>
+                <option value="巳时">巳时 09:00-10:59</option>
+                <option value="午时">午时 11:00-12:59</option>
+                <option value="未时">未时 13:00-14:59</option>
+                <option value="申时">申时 15:00-16:59</option>
+                <option value="酉时">酉时 17:00-18:59</option>
+                <option value="戌时">戌时 19:00-20:59</option>
+                <option value="亥时">亥时 21:00-22:59</option>
+              </select>
+            </label>
+            <label>
+              当前关注
+              <select name="focus">
+                <option value="学业成长">学业成长</option>
+                <option value="事业方向">事业方向</option>
+                <option value="关系沟通">关系沟通</option>
+                <option value="身心节律">身心节律</option>
+                <option value="财务规划">财务规划</option>
+              </select>
+            </label>
+            <label class="wide">
+              想问的问题
+              <textarea name="question" rows="4" placeholder="例如：我适合怎样安排下一阶段学习？"></textarea>
+            </label>
+            <button class="primary-action" type="submit">生成研习记录</button>
+          </form>
+
+          <article class="result" id="result" aria-live="polite">
+            <p class="muted">填写信息后，会生成本地基础解读；部署后配置千问密钥，可获得 AI 补充分析。</p>
+          </article>
+        </section>
+      </section>
+
+      <section class="library" aria-label="知识卡片">
+        <article>
+          <h3>紫微斗数</h3>
+          <p>以命盘十二宫、主星辅曜、四化飞星观察性格倾向与阶段课题，适合做长期复盘。</p>
+        </article>
+        <article>
+          <h3>易经</h3>
+          <p>以阴阳、八卦、六十四卦理解变化结构，适合在决策前梳理处境、动机与风险。</p>
+        </article>
+        <article>
+          <h3>AI 辅助</h3>
+          <p>千问模型可作为讲解员与提问伙伴，帮助把术语翻译成行动建议与学习笔记。</p>
+        </article>
+      </section>
+    </main>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

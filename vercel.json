@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/qianwen",
+      "destination": "/api/qianwen.js"
+    }
+  ]
+}

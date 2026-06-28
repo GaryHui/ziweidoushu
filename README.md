@@ -1,0 +1,26 @@
+# 紫微斗数与易经研习
+
+一个用于学习和使用紫微斗数、易经的网页。页面提供本地研习记录生成，也预留了千问模型接口。
+
+## 本地预览
+
+```bash
+node server.mjs
+```
+
+打开 `http://localhost:4173`。
+
+## 接入千问
+
+部署到 Vercel 后，在项目环境变量里添加：
+
+```text
+DASHSCOPE_API_KEY=你的阿里云百炼 API Key
+QWEN_MODEL=qwen-plus
+```
+
+`QWEN_MODEL` 可选，默认使用 `qwen-plus`。
+
+## 部署到 Vercel
+
+这个项目是静态页面加一个 Vercel Serverless API。导入 GitHub 仓库后，Vercel 可以直接部署，无需构建命令。

@@ -1,0 +1,13 @@
+{
+  "name": "ziweidoushu",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A learning and practice web app for Zi Wei Dou Shu and I Ching.",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
