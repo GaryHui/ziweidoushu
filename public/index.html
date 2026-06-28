@@ -85,6 +85,62 @@
         </section>
       </section>
 
+      <section class="astrolabe-section" aria-labelledby="astrolabe-title">
+        <div class="section-heading">
+          <p class="eyebrow">查命盘</p>
+          <h2 id="astrolabe-title">生成紫微斗数十二宫</h2>
+          <p>使用开源排盘库 iztro 生成命盘数据。先把命宫、身宫、五行局和主星看清楚，再进入解读。</p>
+        </div>
+
+        <form id="astrolabeForm" class="astrolabe-form">
+          <label>
+            历法
+            <select name="calendarType">
+              <option value="solar">阳历</option>
+              <option value="lunar">农历</option>
+            </select>
+          </label>
+          <label>
+            出生日期
+            <input name="date" type="date" value="1981-06-07" required>
+          </label>
+          <label>
+            出生时辰
+            <select name="timeIndex">
+              <option value="0">早子时 00:00-00:59</option>
+              <option value="1">丑时 01:00-02:59</option>
+              <option value="2">寅时 03:00-04:59</option>
+              <option value="3">卯时 05:00-06:59</option>
+              <option value="4">辰时 07:00-08:59</option>
+              <option value="5">巳时 09:00-10:59</option>
+              <option value="6">午时 11:00-12:59</option>
+              <option value="7">未时 13:00-14:59</option>
+              <option value="8">申时 15:00-16:59</option>
+              <option value="9">酉时 17:00-18:59</option>
+              <option value="10">戌时 19:00-20:59</option>
+              <option value="11">亥时 21:00-22:59</option>
+              <option value="12">晚子时 23:00-23:59</option>
+            </select>
+          </label>
+          <label>
+            性别
+            <select name="gender">
+              <option value="male">男</option>
+              <option value="female">女</option>
+            </select>
+          </label>
+          <label class="check-row">
+            <input name="isLeapMonth" type="checkbox">
+            <span>农历闰月</span>
+          </label>
+          <button class="primary-action" type="submit">生成命盘</button>
+        </form>
+
+        <div id="astrolabeResult" class="astrolabe-result" aria-live="polite">
+          <p class="muted">可先试：农历 1981-5-6、辰时、男，对应你提供的示例链接。</p>
+        </div>
+      </section>
+
       <section class="course-section" aria-labelledby="course-title">
         <div class="section-heading">
           <p class="eyebrow">视频课程</p>

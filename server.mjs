@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
+import astrolabeHandler from "./api/astrolabe.js";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
 const publicRoot = join(root, "public");
@@ -17,6 +18,22 @@ const types = {
 
 createServer(async (req, res) => {
   try {
+    if (req.url === "/api/astrolabe") {
+      let body = "";
+      req.on("data", (chunk) => {
+        body += chunk;
+      });
+      req.on("end", () => {
+        try {
+          req.body = body ? JSON.parse(body) : {};
+          astrolabeHandler(req, createJsonResponse(res));
+        } catch (error) {
+          createJsonResponse(res).status(400).json({ error: "请求格式不正确。", detail: error.message });
+        }
+      });
+      return;
+    }
+
     if (req.url === "/api/qianwen") {
       res.writeHead(200, { "content-type": "application/json; charset=utf-8" });
       res.end(JSON.stringify({
@@ -39,3 +56,16 @@ createServer(async (req, res) => {
 }).listen(port, () => {
   console.log(`Zi Wei Dou Shu app running at http://localhost:${port}`);
 });
+
+function createJsonResponse(res) {
+  return {
+    status(code) {
+      res.statusCode = code;
+      return this;
+    },
+    json(payload) {
+      res.writeHead(res.statusCode || 200, { "content-type": "application/json; charset=utf-8" });
+      res.end(JSON.stringify(payload));
+    }
+  };
+}

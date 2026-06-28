@@ -43,6 +43,8 @@ const lessonList = document.querySelector("#lessonList");
 const courseNotes = document.querySelector("#courseNotes");
 const form = document.querySelector("#readingForm");
 const result = document.querySelector("#result");
+const astrolabeForm = document.querySelector("#astrolabeForm");
+const astrolabeResult = document.querySelector("#astrolabeResult");
 
 lessonList.innerHTML = lessons.map((lesson) => `
   <article class="lesson">
@@ -60,6 +62,29 @@ courseNotes.innerHTML = courseSteps.map((step, index) => `
     </div>
   </article>
 `).join("");
+
+astrolabeForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const data = Object.fromEntries(new FormData(astrolabeForm).entries());
+  data.isLeapMonth = data.isLeapMonth === "on";
+
+  astrolabeResult.innerHTML = "<p class=\"muted\">正在生成命盘...</p>";
+
+  try {
+    const response = await fetch("/api/astrolabe", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || payload.error || "生成失败");
+    }
+    astrolabeResult.innerHTML = renderAstrolabe(payload);
+  } catch (error) {
+    astrolabeResult.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+});
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -99,6 +124,67 @@ function hash(value) {
 
 function pick(list, seed) {
   return list[Math.abs(seed) % list.length];
+}
+
+function renderAstrolabe(payload) {
+  const profile = payload.profile;
+  return `
+    <div class="astrolabe-summary">
+      ${summaryItem("阳历", profile.solarDate)}
+      ${summaryItem("农历", profile.lunarDate)}
+      ${summaryItem("四柱", profile.chineseDate)}
+      ${summaryItem("时辰", `${profile.time} ${profile.timeRange}`)}
+      ${summaryItem("生肖 / 星座", `${profile.zodiac} / ${profile.sign}`)}
+      ${summaryItem("五行局", profile.fiveElementsClass)}
+      ${summaryItem("命宫", profile.soulPalaceBranch)}
+      ${summaryItem("身宫", profile.bodyPalaceBranch)}
+    </div>
+    <div class="palace-grid">
+      ${payload.palaces.map(renderPalace).join("")}
+    </div>
+  `;
+}
+
+function summaryItem(label, value) {
+  return `
+    <div class="summary-item">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(value || "-")}</strong>
+    </div>
+  `;
+}
+
+function renderPalace(palace) {
+  const majorStars = palace.majorStars.map((star) => renderStar(star, "major")).join("");
+  const mutagens = palace.majorStars
+    .concat(palace.minorStars)
+    .filter((star) => star.mutagen)
+    .map((star) => `<span class="tag mutagen">${escapeHtml(star.name)}化${escapeHtml(star.mutagen)}</span>`)
+    .join("");
+  const minorStars = palace.minorStars.slice(0, 4).map((star) => renderStar(star)).join("");
+  const flags = [
+    palace.isBodyPalace ? "身宫" : "",
+    palace.isOriginalPalace ? "来因宫" : ""
+  ].filter(Boolean).map((flag) => `<span class="tag mutagen">${flag}</span>`).join("");
+
+  return `
+    <article class="palace-card">
+      <div class="palace-title">
+        <strong>${escapeHtml(palace.name)}</strong>
+        <span>${escapeHtml(palace.heavenlyStem)}${escapeHtml(palace.earthlyBranch)}</span>
+      </div>
+      <div class="palace-tags">${flags}${majorStars || "<span class=\"tag\">无主星</span>"}${mutagens}</div>
+      <div class="palace-tags">${minorStars || "<span class=\"tag\">辅星略</span>"}</div>
+      <div class="palace-meta">
+        大限 ${escapeHtml(palace.decadal?.range?.join("-") || "-")} 岁 · ${escapeHtml(palace.changsheng12)} · ${escapeHtml(palace.boshi12)}
+      </div>
+    </article>
+  `;
+}
+
+function renderStar(star, className = "") {
+  const detail = [star.brightness, star.mutagen ? `化${star.mutagen}` : ""].filter(Boolean).join(" ");
+  return `<span class="tag ${className}">${escapeHtml(star.name)}${detail ? ` ${escapeHtml(detail)}` : ""}</span>`;
 }
 
 function createLocalReading(data, palace, star, hexagram) {

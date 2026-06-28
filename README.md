@@ -7,6 +7,7 @@
 - 紫微斗数与易经入门学习路径
 - 出生信息与问题记录表单
 - 本地基础研习记录生成
+- 基于 `iztro` 的紫微斗数十二宫排盘
 - YouTube 视频课程播放列表嵌入
 - 千问模型补充解读接口预留
 
@@ -28,6 +29,26 @@ QWEN_MODEL=qwen-plus
 ```
 
 `QWEN_MODEL` 可选，默认使用 `qwen-plus`。
+
+## 查命盘
+
+网站通过开源库 `iztro` 生成紫微斗数命盘。接口为：
+
+```text
+POST /api/astrolabe
+```
+
+请求字段：
+
+```json
+{
+  "calendarType": "lunar",
+  "date": "1981-5-6",
+  "timeIndex": "4",
+  "gender": "male",
+  "isLeapMonth": false
+}
+```
 
 ## 部署到 Vercel
 

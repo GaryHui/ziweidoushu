@@ -146,6 +146,7 @@ h3 {
 .study-panel,
 .reading-panel,
 .course-notes,
+.astrolabe-result,
 .library article {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -265,7 +266,8 @@ textarea:focus {
   color: var(--muted);
 }
 
-.course-section {
+.course-section,
+.astrolabe-section {
   margin-top: 24px;
   padding: 26px;
   border: 1px solid rgba(216, 222, 232, 0.92);
@@ -285,6 +287,128 @@ textarea:focus {
   margin: 0;
   color: var(--muted);
   line-height: 1.75;
+}
+
+.astrolabe-form {
+  display: grid;
+  grid-template-columns: 150px repeat(3, minmax(0, 1fr)) 150px 150px;
+  gap: 14px;
+  align-items: end;
+}
+
+.check-row {
+  display: flex;
+  min-height: 45px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.check-row input {
+  width: 18px;
+  height: 18px;
+}
+
+.astrolabe-result {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.astrolabe-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.summary-item {
+  min-height: 78px;
+  padding: 12px;
+  border: 1px solid rgba(216, 222, 232, 0.95);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.summary-item span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.summary-item strong {
+  font-size: 0.98rem;
+}
+
+.palace-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.palace-card {
+  display: grid;
+  gap: 8px;
+  min-height: 188px;
+  padding: 12px;
+  border: 1px solid rgba(216, 222, 232, 0.95);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.palace-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: baseline;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(216, 222, 232, 0.78);
+}
+
+.palace-title strong {
+  font-size: 0.98rem;
+}
+
+.palace-title span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.palace-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(38, 50, 74, 0.08);
+  color: #344054;
+  font-size: 0.78rem;
+}
+
+.tag.major {
+  background: rgba(23, 122, 118, 0.12);
+  color: #12615e;
+  font-weight: 800;
+}
+
+.tag.mutagen {
+  background: rgba(168, 72, 93, 0.12);
+  color: var(--rose);
+  font-weight: 800;
+}
+
+.palace-meta {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
 }
 
 .course-grid {
@@ -382,6 +506,12 @@ textarea:focus {
   .astro-map {
     width: min(100%, 330px);
   }
+
+  .astrolabe-form,
+  .astrolabe-summary,
+  .palace-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 620px) {
@@ -390,13 +520,17 @@ textarea:focus {
     padding-top: 20px;
   }
 
-  .reading-form {
+  .reading-form,
+  .astrolabe-form,
+  .astrolabe-summary,
+  .palace-grid {
     grid-template-columns: 1fr;
   }
 
   .study-panel,
   .reading-panel,
-  .course-section {
+  .course-section,
+  .astrolabe-section {
     padding: 18px;
   }
 }
