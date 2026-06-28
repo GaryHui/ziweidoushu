@@ -86,6 +86,8 @@ astrolabeForm.addEventListener("submit", async (event) => {
   }
 });
 
+astrolabeForm.requestSubmit();
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(form).entries());
@@ -128,63 +130,104 @@ function pick(list, seed) {
 
 function renderAstrolabe(payload) {
   const profile = payload.profile;
+  const palaceByIndex = new Map(payload.palaces.map((palace) => [palace.index, palace]));
+  const chartSlots = [
+    [3, "slot-1"],
+    [4, "slot-2"],
+    [5, "slot-3"],
+    [6, "slot-4"],
+    [2, "slot-5"],
+    [7, "slot-8"],
+    [1, "slot-9"],
+    [8, "slot-12"],
+    [0, "slot-13"],
+    [11, "slot-14"],
+    [10, "slot-15"],
+    [9, "slot-16"]
+  ];
+
   return `
-    <div class="astrolabe-summary">
-      ${summaryItem("阳历", profile.solarDate)}
-      ${summaryItem("农历", profile.lunarDate)}
-      ${summaryItem("四柱", profile.chineseDate)}
-      ${summaryItem("时辰", `${profile.time} ${profile.timeRange}`)}
-      ${summaryItem("生肖 / 星座", `${profile.zodiac} / ${profile.sign}`)}
-      ${summaryItem("五行局", profile.fiveElementsClass)}
-      ${summaryItem("命宫", profile.soulPalaceBranch)}
-      ${summaryItem("身宫", profile.bodyPalaceBranch)}
+    <div class="chart-context">
+      <div>
+        <strong>当前命盘</strong>
+        <span>${escapeHtml(profile.solarDate)} · ${escapeHtml(profile.time.replace("时", ""))} · ${escapeHtml(profile.gender)} · ${escapeHtml(astrolabeForm.calendarType.value === "lunar" ? "农历" : "阳历")}</span>
+      </div>
+      <button type="button">新建</button>
     </div>
-    <div class="palace-grid">
-      ${payload.palaces.map(renderPalace).join("")}
+    <div class="time-context">
+      <strong>当前问盘上下文</strong>
+      <div>
+        ${["-10年", "-1年", "-1月", "-1日", "-1时", "子", "+1时", "+1日", "+1月", "+1年", "+10年", "今日"].map((label) => `<span>${label}</span>`).join("")}
+      </div>
+    </div>
+    <div class="astrolabe-scroll">
+      <div class="chart-board">
+        ${chartSlots.map(([index, slot]) => renderChartPalace(palaceByIndex.get(index), slot)).join("")}
+        ${renderChartCenter(profile)}
+      </div>
     </div>
   `;
 }
 
-function summaryItem(label, value) {
+function renderChartCenter(profile) {
   return `
-    <div class="summary-item">
-      <span>${escapeHtml(label)}</span>
-      <strong>${escapeHtml(value || "-")}</strong>
+    <div class="chart-center">
+      <h3>基本信息</h3>
+      <dl>
+        ${centerItem("五行局", profile.fiveElementsClass)}
+        ${centerItem("四柱", profile.chineseDate)}
+        ${centerItem("阳历", profile.solarDate)}
+        ${centerItem("农历", profile.lunarDate)}
+        ${centerItem("时辰", `${profile.time} ${profile.timeRange}`)}
+        ${centerItem("生肖", profile.zodiac)}
+        ${centerItem("星座", profile.sign)}
+        ${centerItem("命主", profile.soul)}
+        ${centerItem("身主", profile.body)}
+        ${centerItem("命宫", profile.soulPalaceBranch)}
+        ${centerItem("身宫", profile.bodyPalaceBranch)}
+      </dl>
     </div>
   `;
 }
 
-function renderPalace(palace) {
-  const majorStars = palace.majorStars.map((star) => renderStar(star, "major")).join("");
-  const mutagens = palace.majorStars
-    .concat(palace.minorStars)
-    .filter((star) => star.mutagen)
-    .map((star) => `<span class="tag mutagen">${escapeHtml(star.name)}化${escapeHtml(star.mutagen)}</span>`)
-    .join("");
-  const minorStars = palace.minorStars.slice(0, 4).map((star) => renderStar(star)).join("");
-  const flags = [
-    palace.isBodyPalace ? "身宫" : "",
-    palace.isOriginalPalace ? "来因宫" : ""
-  ].filter(Boolean).map((flag) => `<span class="tag mutagen">${flag}</span>`).join("");
+function centerItem(label, value) {
+  return `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value || "-")}</dd></div>`;
+}
+
+function renderChartPalace(palace, slot) {
+  if (!palace) {
+    return "";
+  }
+  const majorStars = palace.majorStars.map((star) => renderChartStar(star, "major")).join("");
+  const minorStars = palace.minorStars.slice(0, 7).map((star) => renderChartStar(star)).join("");
+  const adjectiveStars = palace.adjectiveStars.slice(0, 4).map((star) => renderChartStar(star)).join("");
+  const bodyMark = palace.isBodyPalace ? "<span class=\"body-mark\">身宫</span>" : "";
+  const originalMark = palace.isOriginalPalace ? "<span class=\"body-mark\">来因</span>" : "";
 
   return `
-    <article class="palace-card">
-      <div class="palace-title">
-        <strong>${escapeHtml(palace.name)}</strong>
+    <article class="chart-palace ${slot}">
+      <div class="star-field major-field">${majorStars || "<span>无主星</span>"}</div>
+      <div class="star-field minor-field">${minorStars}${adjectiveStars}</div>
+      <div class="palace-footer">
+        <div>
+          <strong>${escapeHtml(palace.name)}</strong>
+          ${bodyMark}${originalMark}
+        </div>
         <span>${escapeHtml(palace.heavenlyStem)}${escapeHtml(palace.earthlyBranch)}</span>
       </div>
-      <div class="palace-tags">${flags}${majorStars || "<span class=\"tag\">无主星</span>"}${mutagens}</div>
-      <div class="palace-tags">${minorStars || "<span class=\"tag\">辅星略</span>"}</div>
-      <div class="palace-meta">
-        大限 ${escapeHtml(palace.decadal?.range?.join("-") || "-")} 岁 · ${escapeHtml(palace.changsheng12)} · ${escapeHtml(palace.boshi12)}
+      <div class="palace-cycles">
+        <span>${escapeHtml(palace.changsheng12)}</span>
+        <span>${escapeHtml(palace.boshi12)}</span>
+        <span>大限 ${escapeHtml(palace.decadal?.range?.join("-") || "-")}</span>
       </div>
     </article>
   `;
 }
 
-function renderStar(star, className = "") {
-  const detail = [star.brightness, star.mutagen ? `化${star.mutagen}` : ""].filter(Boolean).join(" ");
-  return `<span class="tag ${className}">${escapeHtml(star.name)}${detail ? ` ${escapeHtml(detail)}` : ""}</span>`;
+function renderChartStar(star, className = "") {
+  const mutagen = star.mutagen ? `化${star.mutagen}` : "";
+  const brightness = star.brightness ? ` ${star.brightness}` : "";
+  return `<span class="${className} ${mutagen ? "with-mutagen" : ""}">${escapeHtml(star.name)}${escapeHtml(mutagen)}${escapeHtml(brightness)}</span>`;
 }
 
 function createLocalReading(data, palace, star, hexagram) {
