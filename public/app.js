@@ -38,9 +38,22 @@ const courseSteps = [
     text: "每周整理一次笔记，区分知识、体会和待查资料。"
   }
 ];
+const mutagenRows = [
+  { stem: "甲", lu: "廉贞", quan: "破军", ke: "武曲", ji: "太阳" },
+  { stem: "乙", lu: "天机", quan: "天梁", ke: "紫微", ji: "太阴" },
+  { stem: "丙", lu: "天同", quan: "天机", ke: "文昌", ji: "廉贞" },
+  { stem: "丁", lu: "太阴", quan: "天同", ke: "天机", ji: "巨门" },
+  { stem: "戊", lu: "贪狼", quan: "太阳", ke: "右弼", ji: "天机" },
+  { stem: "己", lu: "武曲", quan: "贪狼", ke: "天梁", ji: "文曲" },
+  { stem: "庚", lu: "太阳", quan: "武曲", ke: "天府", ji: "天同" },
+  { stem: "辛", lu: "巨门", quan: "太阳", ke: "文曲", ji: "文昌" },
+  { stem: "壬", lu: "天梁", quan: "紫微", ke: "左辅", ji: "武曲" },
+  { stem: "癸", lu: "破军", quan: "巨门", ke: "太阴", ji: "贪狼" }
+];
 
 const lessonList = document.querySelector("#lessonList");
 const courseNotes = document.querySelector("#courseNotes");
+const mutagenTable = document.querySelector("#mutagenTable");
 const form = document.querySelector("#readingForm");
 const result = document.querySelector("#result");
 const astrolabeForm = document.querySelector("#astrolabeForm");
@@ -67,6 +80,16 @@ courseNotes.innerHTML = courseSteps.map((step, index) => `
       <p>${step.text}</p>
     </div>
   </article>
+`).join("");
+
+mutagenTable.innerHTML = mutagenRows.map((row) => `
+  <tr>
+    <th>${row.stem}干</th>
+    <td>${row.lu}化禄</td>
+    <td>${row.quan}化权</td>
+    <td>${row.ke}化科</td>
+    <td>${row.ji}化忌</td>
+  </tr>
 `).join("");
 
 populateAstrolabeSelectors();
@@ -233,6 +256,7 @@ function renderAstrolabe(payload, input) {
 
 function renderChartCenter(profile, input) {
   const genderSymbol = profile.gender === "女" ? "♀" : "♂";
+  const birthMutagens = formatMutagens(profile.birthYearMutagens);
   return `
     <div class="chart-center">
       <svg class="center-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -252,6 +276,8 @@ function renderChartCenter(profile, input) {
           ${centerItem("星座", profile.sign)}
           ${centerItem("命主", profile.soul)}
           ${centerItem("身主", profile.body)}
+          ${centerItem("生年干", profile.birthYearStem)}
+          ${centerItem("生年四化", birthMutagens)}
           ${centerItem("命宫", profile.soulPalaceBranch)}
           ${centerItem("身宫", profile.bodyPalaceBranch)}
           ${centerItem("地点", [input.province, input.city].filter(Boolean).join(" ") || "未指定")}
@@ -272,6 +298,13 @@ function renderChartCenter(profile, input) {
 
 function centerItem(label, value) {
   return `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value || "-")}</dd></div>`;
+}
+
+function formatMutagens(mutagens) {
+  if (!mutagens) {
+    return "-";
+  }
+  return `${mutagens.lu}禄 ${mutagens.quan}权 ${mutagens.ke}科 ${mutagens.ji}忌`;
 }
 
 function renderChartPalace(palace, slot) {

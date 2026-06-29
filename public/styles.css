@@ -314,6 +314,7 @@ textarea:focus {
 }
 
 .course-section,
+.mutagen-section,
 .astrolabe-section {
   margin-top: 24px;
   padding: 26px;
@@ -425,6 +426,61 @@ textarea:focus {
   color: var(--muted);
   font-size: 0.92rem;
   line-height: 1.65;
+}
+
+.mutagen-table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(198, 217, 194, 0.95);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.mutagen-table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+}
+
+.mutagen-table th,
+.mutagen-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid rgba(216, 222, 232, 0.9);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.mutagen-table thead th {
+  background: #f2faeb;
+  color: #344054;
+}
+
+.mutagen-table tbody th {
+  color: #51269b;
+}
+
+.mutagen-table tbody tr:last-child th,
+.mutagen-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.mutagen-table td:nth-child(2) {
+  color: #177a76;
+  font-weight: 800;
+}
+
+.mutagen-table td:nth-child(3) {
+  color: #b8812c;
+  font-weight: 800;
+}
+
+.mutagen-table td:nth-child(4) {
+  color: #51269b;
+  font-weight: 800;
+}
+
+.mutagen-table td:nth-child(5) {
+  color: #b13e52;
+  font-weight: 800;
 }
 
 .chart-context {
@@ -866,6 +922,7 @@ textarea:focus {
   .study-panel,
   .reading-panel,
   .course-section,
+  .mutagen-section,
   .astrolabe-section {
     padding: 18px;
   }
