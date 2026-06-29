@@ -14,6 +14,10 @@
           <p class="eyebrow">传统术数学堂</p>
           <h1 id="page-title">紫微斗数与易经研习</h1>
           <p class="intro">从星曜、宫位、四化，到卦象、爻辞与日常决策，把复杂体系拆成可学习、可记录、可复盘的路径。</p>
+          <div class="mode-actions" aria-label="主要入口">
+            <a href="#public-test">公开自测</a>
+            <a href="#internal-study">内测研习</a>
+          </div>
         </div>
         <div class="astro-map" aria-hidden="true">
           <span></span><span></span><span></span><span></span>
@@ -21,66 +25,149 @@
         </div>
       </section>
 
-      <section class="astrolabe-section" aria-labelledby="astrolabe-title">
+      <section class="mode-overview" aria-label="产品分区">
+        <article>
+          <p class="eyebrow">Public</p>
+          <h2>公开自测</h2>
+          <p>让访客输入资料，生成准确命盘，并基于盘面事实获得基础解读。</p>
+        </article>
+        <article>
+          <p class="eyebrow">Private</p>
+          <h2>内测研习</h2>
+          <p>给自己系统学习：课程、视频、术语、练习、案例和 AI 辅导。</p>
+        </article>
+      </section>
+
+      <section id="public-test" class="astrolabe-section" aria-labelledby="astrolabe-title">
         <div class="section-heading">
-          <p class="eyebrow">查命盘</p>
-          <h2 id="astrolabe-title">生成紫微斗数十二宫</h2>
-          <p>使用开源排盘库 iztro 生成命盘数据。先把命宫、身宫、五行局和主星看清楚，再进入解读。</p>
+          <p class="eyebrow">公开自测</p>
+          <h2 id="astrolabe-title">紫微斗数在线排盘</h2>
+          <p>按参考站结构输入资料，使用 iztro 生成命盘。对外版本必须先保证输入明确、排盘一致，再做 AI 解读。</p>
         </div>
 
         <form id="astrolabeForm" class="astrolabe-form">
-          <label>
-            历法
-            <select name="calendarType" required>
-              <option value="" selected disabled>选择历法</option>
-              <option value="solar">阳历</option>
-              <option value="lunar">农历</option>
-            </select>
-          </label>
-          <label>
-            出生日期
-            <input name="date" type="date" required>
-          </label>
-          <label>
-            出生时辰
-            <select name="timeIndex" required>
-              <option value="" selected disabled>选择时辰</option>
-              <option value="0">早子时 00:00-00:59</option>
-              <option value="1">丑时 01:00-02:59</option>
-              <option value="2">寅时 03:00-04:59</option>
-              <option value="3">卯时 05:00-06:59</option>
-              <option value="4">辰时 07:00-08:59</option>
-              <option value="5">巳时 09:00-10:59</option>
-              <option value="6">午时 11:00-12:59</option>
-              <option value="7">未时 13:00-14:59</option>
-              <option value="8">申时 15:00-16:59</option>
-              <option value="9">酉时 17:00-18:59</option>
-              <option value="10">戌时 19:00-20:59</option>
-              <option value="11">亥时 21:00-22:59</option>
-              <option value="12">晚子时 23:00-23:59</option>
-            </select>
-          </label>
-          <label>
-            性别
-            <select name="gender" required>
-              <option value="" selected disabled>选择性别</option>
-              <option value="male">男</option>
-              <option value="female">女</option>
-            </select>
-          </label>
-          <label class="check-row">
-            <input name="isLeapMonth" type="checkbox">
-            <span>农历闰月</span>
-          </label>
-          <button class="primary-action" type="submit">生成命盘</button>
+          <div class="form-row">
+            <label>
+              测试姓名
+              <input name="personName" placeholder="某人" value="某人">
+            </label>
+            <fieldset>
+              <legend>性别</legend>
+              <label class="radio-row"><input name="gender" type="radio" value="male" required> 男</label>
+              <label class="radio-row"><input name="gender" type="radio" value="female"> 女</label>
+            </fieldset>
+            <fieldset>
+              <legend>日期类型</legend>
+              <label class="radio-row"><input name="calendarType" type="radio" value="solar" required> 阳历</label>
+              <label class="radio-row"><input name="calendarType" type="radio" value="lunar"> 阴历</label>
+              <label class="radio-row"><input name="isLeapMonth" type="checkbox"> 闰月</label>
+            </fieldset>
+          </div>
+
+          <div class="form-row">
+            <label>
+              年
+              <select name="birthYear" data-range="birth-years" required></select>
+            </label>
+            <label>
+              月
+              <select name="birthMonth" data-range="months" required></select>
+            </label>
+            <label>
+              日
+              <select name="birthDay" data-range="days" required></select>
+            </label>
+            <label>
+              时
+              <select name="birthHour" data-range="hours" required></select>
+            </label>
+            <label>
+              分
+              <select name="birthMinute" data-range="minutes" required></select>
+            </label>
+          </div>
+
+          <div class="form-row">
+            <label>
+              出生省份
+              <select name="province">
+                <option value="">选择省份</option>
+                <option>北京</option><option>上海</option><option>天津</option><option>重庆</option>
+                <option>广东</option><option>江苏</option><option>浙江</option><option>福建</option>
+                <option>山东</option><option>四川</option><option>湖北</option><option>湖南</option>
+                <option>河南</option><option>河北</option><option>陕西</option><option>台湾</option>
+                <option>香港</option><option>澳门</option>
+              </select>
+            </label>
+            <label>
+              出生城市
+              <input name="city" placeholder="选择城市">
+            </label>
+            <label>
+              太阳真时
+              <select name="trueSolarTime">
+                <option value="off">不使用</option>
+                <option value="on">使用</option>
+              </select>
+            </label>
+            <label>
+              选择盘式
+              <select name="chartType">
+                <option value="sky">先天盘-天盘</option>
+                <option value="earth">先天盘-地盘</option>
+                <option value="human">先天盘-人盘</option>
+                <option value="year">流年盘</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="form-row">
+            <label>
+              流年
+              <select name="flowYear" data-range="flow-years"></select>
+            </label>
+            <label>
+              流月
+              <select name="flowMonth" data-range="months"></select>
+            </label>
+            <label>
+              流日
+              <select name="flowDay" data-range="flow-days"></select>
+            </label>
+            <label>
+              流时
+              <select name="flowHour" data-range="hours"></select>
+            </label>
+            <label>
+              流分
+              <select name="flowMinute" data-range="minutes"></select>
+            </label>
+          </div>
+
+          <button class="primary-action" type="submit">开始排盘</button>
         </form>
 
         <div id="astrolabeResult" class="astrolabe-result" aria-live="polite">
           <p class="muted">填写出生资料后生成命盘。若要和参考链接一致，请选择“农历”。</p>
         </div>
+
+        <div class="accuracy-panel" aria-label="准确性说明">
+          <article>
+            <h3>排盘准确</h3>
+            <p>历法、闰月、时分、性别、地点和盘式分开输入，减少误排。</p>
+          </article>
+          <article>
+            <h3>解读有据</h3>
+            <p>后续 AI 解读会先引用命宫、身宫、主星、四化、大限等盘面依据。</p>
+          </article>
+          <article>
+            <h3>边界清晰</h3>
+            <p>对外说明传统文化参考，不替代医疗、法律、投资等专业建议。</p>
+          </article>
+        </div>
       </section>
 
-      <section class="workspace" aria-label="研习工作台">
+      <section id="internal-study" class="workspace" aria-label="内测研习工作台">
         <aside class="study-panel">
           <div class="panel-heading">
             <p class="eyebrow">学习路径</p>

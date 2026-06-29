@@ -89,6 +89,31 @@ h3 {
   line-height: 1.85;
 }
 
+.mode-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.mode-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--night);
+  border-radius: 7px;
+  color: var(--night);
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.mode-actions a:first-child {
+  background: var(--night);
+  color: #fff;
+}
+
 .astro-map {
   position: relative;
   aspect-ratio: 1;
@@ -137,6 +162,7 @@ h3 {
 }
 
 .workspace {
+  margin-top: 24px;
   display: grid;
   grid-template-columns: 340px minmax(0, 1fr);
   gap: 24px;
@@ -266,6 +292,27 @@ textarea:focus {
   color: var(--muted);
 }
 
+.mode-overview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 8px;
+}
+
+.mode-overview article {
+  padding: 22px;
+  border: 1px solid rgba(216, 222, 232, 0.92);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 32px rgba(38, 50, 74, 0.07);
+}
+
+.mode-overview p:last-child {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 .course-section,
 .astrolabe-section {
   margin-top: 24px;
@@ -291,9 +338,47 @@ textarea:focus {
 
 .astrolabe-form {
   display: grid;
-  grid-template-columns: 150px repeat(3, minmax(0, 1fr)) 150px 150px;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid rgba(198, 217, 194, 0.95);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 14px;
   align-items: end;
+}
+
+.astrolabe-form fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 45px;
+  gap: 10px 14px;
+  align-items: center;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid #c8d0dc;
+  border-radius: 7px;
+  background: #fff;
+}
+
+.astrolabe-form legend {
+  padding: 0 4px;
+  color: #344054;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.radio-row {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  color: #344054;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .check-row {
@@ -309,11 +394,37 @@ textarea:focus {
   height: 18px;
 }
 
+.radio-row input {
+  width: 16px;
+  height: 16px;
+}
+
 .astrolabe-result {
   margin-top: 20px;
   padding: 0;
   overflow: hidden;
   background: #f8fff3;
+}
+
+.accuracy-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.accuracy-panel article {
+  padding: 16px;
+  border: 1px solid rgba(198, 217, 194, 0.95);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.accuracy-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.65;
 }
 
 .chart-context {
@@ -712,8 +823,10 @@ textarea:focus {
 
 @media (max-width: 860px) {
   .hero,
+  .mode-overview,
   .workspace,
   .course-grid,
+  .accuracy-panel,
   .library {
     grid-template-columns: 1fr;
   }
@@ -729,6 +842,10 @@ textarea:focus {
   .astrolabe-form {
     grid-template-columns: 1fr 1fr;
   }
+
+  .form-row {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 620px) {
@@ -739,6 +856,10 @@ textarea:focus {
 
   .reading-form,
   .astrolabe-form {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
     grid-template-columns: 1fr;
   }
 

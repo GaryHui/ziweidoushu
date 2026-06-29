@@ -45,6 +45,12 @@ const form = document.querySelector("#readingForm");
 const result = document.querySelector("#result");
 const astrolabeForm = document.querySelector("#astrolabeForm");
 const astrolabeResult = document.querySelector("#astrolabeResult");
+const chartTypeLabels = {
+  sky: "先天盘-天盘",
+  earth: "先天盘-地盘",
+  human: "先天盘-人盘",
+  year: "流年盘"
+};
 
 lessonList.innerHTML = lessons.map((lesson) => `
   <article class="lesson">
@@ -63,10 +69,17 @@ courseNotes.innerHTML = courseSteps.map((step, index) => `
   </article>
 `).join("");
 
+populateAstrolabeSelectors();
+
 astrolabeForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(astrolabeForm).entries());
   data.isLeapMonth = data.isLeapMonth === "on";
+  data.date = `${data.birthYear}-${data.birthMonth}-${data.birthDay}`;
+  data.timeIndex = String(hourToTimeIndex(Number(data.birthHour)));
+  data.birthClock = `${pad(data.birthHour)}:${pad(data.birthMinute)}`;
+  data.flowDate = `${data.flowYear}-${data.flowMonth}-${data.flowDay} ${pad(data.flowHour)}:${pad(data.flowMinute)}`;
+  data.chartTypeLabel = chartTypeLabels[data.chartType] || "先天盘-天盘";
 
   astrolabeResult.innerHTML = "<p class=\"muted\">正在生成命盘...</p>";
 
@@ -80,7 +93,7 @@ astrolabeForm.addEventListener("submit", async (event) => {
     if (!response.ok) {
       throw new Error(payload.detail || payload.error || "生成失败");
     }
-    astrolabeResult.innerHTML = renderAstrolabe(payload);
+    astrolabeResult.innerHTML = renderAstrolabe(payload, data);
   } catch (error) {
     astrolabeResult.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
   }
@@ -126,7 +139,58 @@ function pick(list, seed) {
   return list[Math.abs(seed) % list.length];
 }
 
-function renderAstrolabe(payload) {
+function populateAstrolabeSelectors() {
+  fillSelect("birth-years", 1900, new Date().getFullYear(), "年");
+  fillSelect("flow-years", 1930, 2050, "");
+  fillSelect("months", 1, 12, "月");
+  fillSelect("days", 1, 30, "日");
+  fillSelect("flow-days", 1, 31, "");
+  fillSelect("hours", 0, 23, "", formatHourOption);
+  fillSelect("minutes", 0, 59, "分");
+
+  const now = new Date();
+  setSelectValue("flowYear", now.getFullYear());
+  setSelectValue("flowMonth", now.getMonth() + 1);
+  setSelectValue("flowDay", now.getDate());
+  setSelectValue("flowHour", 0);
+  setSelectValue("flowMinute", 0);
+}
+
+function fillSelect(rangeName, start, end, suffix, formatter) {
+  document.querySelectorAll(`[data-range="${rangeName}"]`).forEach((select) => {
+    select.innerHTML = "<option value=\"\" selected disabled>请选择</option>";
+    for (let value = start; value <= end; value += 1) {
+      const option = document.createElement("option");
+      option.value = String(value);
+      option.textContent = formatter ? formatter(value) : `${value}${suffix}`;
+      select.append(option);
+    }
+  });
+}
+
+function setSelectValue(name, value) {
+  const select = astrolabeForm.elements[name];
+  if (select) {
+    select.value = String(value);
+  }
+}
+
+function formatHourOption(hour) {
+  const branches = ["子时", "丑时", "丑时", "寅时", "寅时", "卯时", "卯时", "辰时", "辰时", "巳时", "巳时", "午时", "午时", "未时", "未时", "申时", "申时", "酉时", "酉时", "戌时", "戌时", "亥时", "亥时", "子时"];
+  return `${hour}-${branches[hour]}`;
+}
+
+function hourToTimeIndex(hour) {
+  if (hour === 23) {
+    return 12;
+  }
+  if (hour === 0) {
+    return 0;
+  }
+  return Math.ceil(hour / 2);
+}
+
+function renderAstrolabe(payload, input) {
   const profile = payload.profile;
   const palaceByIndex = new Map(payload.palaces.map((palace) => [palace.index, palace]));
   const chartSlots = [
@@ -148,7 +212,7 @@ function renderAstrolabe(payload) {
     <div class="chart-context">
       <div>
         <strong>当前命盘</strong>
-        <span>${escapeHtml(profile.solarDate)} · ${escapeHtml(profile.time.replace("时", ""))} · ${escapeHtml(profile.gender)} · ${escapeHtml(astrolabeForm.calendarType.value === "lunar" ? "农历" : "阳历")}</span>
+        <span>${escapeHtml(input.personName || "某人")} · ${escapeHtml(profile.solarDate)} · ${escapeHtml(input.birthClock)} · ${escapeHtml(profile.time.replace("时", ""))} · ${escapeHtml(profile.gender)} · ${escapeHtml(input.calendarType === "lunar" ? "阴历" : "阳历")} · ${escapeHtml(input.chartTypeLabel)}</span>
       </div>
       <button type="button">新建</button>
     </div>
@@ -161,14 +225,13 @@ function renderAstrolabe(payload) {
     <div class="astrolabe-scroll">
       <div class="chart-board">
         ${chartSlots.map(([index, slot]) => renderChartPalace(palaceByIndex.get(index), slot)).join("")}
-        ${renderChartCenter(profile)}
+        ${renderChartCenter(profile, input)}
       </div>
     </div>
   `;
 }
 
-function renderChartCenter(profile) {
-  const today = formatDate(new Date());
+function renderChartCenter(profile, input) {
   const genderSymbol = profile.gender === "女" ? "♀" : "♂";
   return `
     <div class="chart-center">
@@ -191,13 +254,15 @@ function renderChartCenter(profile) {
           ${centerItem("身主", profile.body)}
           ${centerItem("命宫", profile.soulPalaceBranch)}
           ${centerItem("身宫", profile.bodyPalaceBranch)}
+          ${centerItem("地点", [input.province, input.city].filter(Boolean).join(" ") || "未指定")}
+          ${centerItem("太阳真时", input.trueSolarTime === "on" ? "使用" : "不使用")}
         </dl>
       </section>
       <section class="fortune-panel">
         <h3>运限信息</h3>
         <dl class="center-grid">
-          ${centerItem("农历", "二〇二六年五月十四")}
-          ${centerItem("阳历", today)}
+          ${centerItem("盘式", input.chartTypeLabel)}
+          ${centerItem("流年", input.flowDate)}
         </dl>
       </section>
       <span class="powered">Powered by iztro</span>
@@ -274,6 +339,10 @@ function formatDate(date) {
     date.getMonth() + 1,
     date.getDate()
   ].join("-");
+}
+
+function pad(value) {
+  return String(value).padStart(2, "0");
 }
 
 function createLocalReading(data, palace, star, hexagram) {
